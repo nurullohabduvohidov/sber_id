@@ -1,0 +1,33 @@
+PODS:
+  - ClickstreamSDK (1.5.0)
+  - Flutter (1.0.0)
+  - sber_id (0.0.1):
+    - Flutter
+    - SIDSDKStatic (~> 1.4.0)
+  - SIDSDKStatic (1.4.0):
+    - ClickstreamSDK (~> 1.5.0)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - sber_id (from `.symlinks/plugins/sber_id/ios`)
+
+SPEC REPOS:
+  trunk:
+    - ClickstreamSDK
+    - SIDSDKStatic
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  sber_id:
+    :path: ".symlinks/plugins/sber_id/ios"
+
+SPEC CHECKSUMS:
+  ClickstreamSDK: 591cbf0c2f96bcaba6a36365a94a19f4463a1ae5
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  sber_id: a64f1df7fe7243d6053be241ed40df623a620346
+  SIDSDKStatic: e97afae620d469a70f14eead610332e072f2ec2b
+
+PODFILE CHECKSUM: 928e8d342703d819638f9872000caefff7bec884
+
+COCOAPODS: 1.16.2
