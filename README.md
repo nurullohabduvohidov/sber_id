@@ -13,7 +13,7 @@ Flutter plugin for Sber ID authentication on iOS platform.
 
 | Platform | Support | Min Version |
 |----------|---------|-------------|
-| iOS      | ✅      | 15.0+       |
+| iOS      | ✅      | 14.0+       |
 | Android  | 🚧      | Coming soon |
 
 ## Installation
@@ -22,35 +22,67 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  sber_id: ^0.0.1
+  sber_id: ^0.0.1+1
 ```
 
 ## iOS Setup
 
 ### 1. Minimum iOS Version
-Ensure your iOS deployment target is 15.0+ in `ios/Podfile`:
+Ensure your iOS deployment target is 14.0+ in `ios/Podfile`:
 
 ```ruby
-platform :ios, '15.0'
+platform :ios, '14.0'
 ```
 
-### 2. Add URL Scheme to Info.plist
+### 2. Configure URL Scheme
+
+#### Step 2.1: Choose your URL scheme
+Your `redirectUri` should follow this format: `yourapp://auth`
+
+**Examples:**
+- App name "MyStore" → `mystore://auth`
+- App name "ShopApp" → `shopapp://auth`
+
+#### Step 2.2: Add URL Scheme to Info.plist
+
+Replace `yourapp` with your chosen scheme:
 
 ```xml
 <key>CFBundleURLTypes</key>
 <array>
     <dict>
         <key>CFBundleURLName</key>
-        <string>com.yourcompany.yourapp.auth</string>
+        <string>com.example.app</string>
         <key>CFBundleURLSchemes</key>
         <array>
-            <string>yourapp</string> <!-- Replace with your scheme -->
+            <string>yourapp</string> <!-- Replace with your scheme (e.g., mystore, mango) -->
         </array>
     </dict>
 </array>
 ```
 
-### 3. Add LSApplicationQueriesSchemes
+**For example for Mango app:**
+```xml
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleURLName</key>
+        <string>com.mango.app</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>mango</string>
+        </array>
+    </dict>
+</array>
+```
+
+### 3. Register redirectUri with Sber ID
+
+⚠️ **Important:** You must register your `redirectUri` with Sber ID:
+
+Contact Sber ID support (`support@ecom.sberbank.ru`) to register your `clientId` and `redirectUri` before using in production.
+
+### 4. Add LSApplicationQueriesSchemes
 
 ```xml
 <key>LSApplicationQueriesSchemes</key>
@@ -64,7 +96,7 @@ platform :ios, '15.0'
 </array>
 ```
 
-### 4. Add NSAppTransportSecurity
+### 5. Add NSAppTransportSecurity
 
 ```xml
 <key>NSAppTransportSecurity</key>
@@ -88,96 +120,60 @@ import 'package:sber_id/sber_id.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize
+  // Initialize with your credentials
   await SBerId.instance.initialize(
     SBerIdConfig(
-      clientId: 'your-sber-id-client-id',     // From Sber ID developer portal
-      redirectUri: 'yourapp://auth',          // Your app's custom URL scheme
-      partnerName: 'Your Company Name',       // Your company/app name
-      isProduction: false,                    // true for production
+      clientId: 'your-client-id',           // From Sber ID developer portal
+      redirectUri: 'yourapp://auth',        // Must match Info.plist URL scheme
+      partnerName: 'Your App Name',         // Your app name
     ),
   );
 
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SberIdExample(),
-    );
-  }
-}
-
-class SberIdExample extends StatefulWidget {
-  @override
-  _SberIdExampleState createState() => _SberIdExampleState();
-}
-
-class _SberIdExampleState extends State<SberIdExample> {
-  
-  Future<void> _checkInstallation() async {
-    final isInstalled = await SBerId.instance.isSBerIdInstalled();
-    print('Sber ID app installed: $isInstalled');
-  }
-
-  Future<void> _login() async {
-    final result = await SBerId.instance.login();
-    if (result?.isSuccess == true) {
-      print('Login successful!');
-      print('Auth code: ${result?.authCode}');
-      print('State: ${result?.state}');
-    } else {
-      print('Login failed: ${result?.error}');
-    }
-  }
-
-  Future<void> _logout() async {
-    await SBerId.instance.logout();
-    print('Logged out');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Sber ID Example')),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: _checkInstallation,
-            child: Text('Check Sber ID Installation'),
-          ),
-          ElevatedButton(
-            onPressed: _login,
-            child: Text('Login with Sber ID'),
-          ),
-          ElevatedButton(
-            onPressed: _logout,
-            child: Text('Logout'),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// Rest of the example code...
 ```
 
 ## Configuration
 
-Replace the placeholder values with your actual Sber ID credentials:
+### Required Parameters
 
-- **clientId**: Your client ID from Sber ID developer portal
-- **redirectUri**: Your app's registered redirect URI (must match URL scheme)
-- **partnerName**: Your company or application name
-- **isProduction**: Set to `true` for production environment
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `clientId` | Your client ID from Sber ID developer portal | `'abc123-def456-ghi789'` |
+| `redirectUri` | Your app's custom URL scheme (must be registered with Sber ID) | `'myapp://auth'` |
+| `partnerName` | Your company or application name | `'My Company'` |
 
-## Requirements
+### URL Scheme Matching
 
-- iOS 15.0+
-- Flutter 3.3.0+
-- Dart 3.0.0+
-- Xcode 15.0+
+Make sure your configuration matches:
+
+**In your Dart code:**
+```dart
+redirectUri: 'mango://auth'
+```
+
+**In Info.plist:**
+```xml
+<string>mango</string>  <!-- Same scheme name -->
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"Invalid redirect URI" error**
+    - Ensure `redirectUri` is registered with Sber ID
+    - Check URL scheme matches Info.plist exactly
+
+2. **App doesn't open after authentication**
+    - Verify URL scheme in Info.plist
+    - Check `CFBundleURLSchemes` array
+
+3. **"Sber ID app not found" error**
+    - Add all required schemes to `LSApplicationQueriesSchemes`
+
 
 ## License
 
@@ -185,4 +181,5 @@ MIT License
 
 ## Support
 
-For issues and feature requests, please visit our [GitHub repository](https://github.com/your-username/sber_id).
+For issues and feature requests, please visit our [GitHub repository](https://github.com/nurullohabduvohidov/sber_id).
+

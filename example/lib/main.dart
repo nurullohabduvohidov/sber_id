@@ -10,9 +10,10 @@ void main() async {
       clientId: 'your-client-id',
       redirectUri: 'yourapp://auth',
       partnerName: 'Your App Name',
-      isProduction: false,
     ),
   );
+
+
 
   runApp(const MyApp());
 }

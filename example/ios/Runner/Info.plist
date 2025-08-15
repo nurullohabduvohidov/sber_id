@@ -46,9 +46,9 @@
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
 
-    <!-- SBER ID CONFIGURATION - REQUIRED FOR AUTHENTICATION -->
+    <!-- SBer ID CONFIGURATION - REQUIRED FOR AUTHENTICATION -->
 
-    <!-- NSAppTransportSecurity - Allow communication with Sber ID servers -->
+    <!-- NSAppTransportSecurity - Allow communication with SBer ID servers -->
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSExceptionDomains</key>
@@ -61,23 +61,21 @@
         </dict>
     </dict>
 
-    <!-- CFBundleURLTypes - Register your app's URL scheme -->
-    <!-- IMPORTANT: Change 'yourapp' to match your redirectUri scheme -->
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.yourcompany.yourapp.auth</string>
+            <string>com.example.app</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>yourapp</string> <!-- Change this to match your redirectUri -->
+                <string>myapp</string>
             </array>
         </dict>
     </array>
 
-    <!-- LSApplicationQueriesSchemes - Allow checking for Sber ID apps -->
+    <!-- LSApplicationQueriesSchemes - Allow checking for SBer ID apps -->
     <key>LSApplicationQueriesSchemes</key>
     <array>
         <string>sberbankidexternallogin</string>
@@ -88,7 +86,7 @@
         <string>sberbankid</string>
     </array>
 
-    <!-- END SBER ID CONFIGURATION -->
+    <!-- END SBer ID CONFIGURATION -->
 
 </dict>
 </plist>
